@@ -56,16 +56,20 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 # host group for masters
 [masters]
-$MASTER.$DOMAIN
+#$MASTER.$DOMAIN
+$MASTER
 
 # host group for nodes
 [nodes]
-$MASTER.$DOMAIN openshift_node_labels="{'region': 'master', 'zone': 'default'}"
+#$MASTER.$DOMAIN openshift_node_labels="{'region': 'master', 'zone': 'default'}"
+$MASTER openshift_node_labels="{'region': 'master', 'zone': 'default'}"
+
 EOF
 
 for (( c=0; c<$NODECOUNT; c++ ))
 do
-  echo "$NODEPREFIX-$c.$DOMAIN openshift_node_labels=\"{'region': 'infra', 'zone': 'default'}\"" >> /etc/ansible/hosts
+ #echo "$NODEPREFIX-$c.$DOMAIN openshift_node_labels=\"{'region': 'infra', 'zone': 'default'}\"" >> /etc/ansible/hosts
+   echo "$NODEPREFIX-$c openshift_node_labels=\"{'region': 'infra', 'zone': 'default'}\"" >> /etc/ansible/hosts
 done
 
 runuser -l $SUDOUSER -c "git clone https://github.com/openshift/openshift-ansible /home/$SUDOUSER/openshift-ansible"
